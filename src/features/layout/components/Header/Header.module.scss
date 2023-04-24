@@ -1,0 +1,20 @@
+.header {
+  position: fixed;
+  z-index: 3;
+  left: 0;
+  display: flex;
+  width: 100%;
+  height: var(--vkui--size_panel_header_height--regular);
+  box-sizing: border-box;
+  align-items: center;
+  border-bottom: 1px solid rgb(0 0 0 / 8%);
+  border-bottom: 1px solid var(--vkui--color_image_border_alpha);
+  background: #fff;
+  background: var(--vkui--color_background_content);
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
