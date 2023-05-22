@@ -9,7 +9,11 @@ const App = () => {
   const appearance = useAppSelector((state) => state.layout.appearance);
 
   return (
-    <ConfigProvider webviewType={WebviewType.INTERNAL} appearance={appearance}>
+    <ConfigProvider
+      platform="android"
+      webviewType={WebviewType.INTERNAL}
+      appearance={appearance}
+    >
       <AppRoot>
         <RouterProvider router={router} />
       </AppRoot>

@@ -2,15 +2,17 @@ export interface User {
   id: string;
   name: string;
   email: string;
+  vk_access_token: string;
 }
 
 export interface AuthState {
   token: string | null;
+  vk_token: string | null;
 }
 
 export interface LoginResponse {
   user: User;
-  accessToken: string;
+  access_token: string;
 }
 
 export interface LoginRequest {

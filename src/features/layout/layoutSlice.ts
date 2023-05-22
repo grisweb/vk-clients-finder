@@ -1,4 +1,8 @@
-import { createListenerMiddleware, createSlice } from '@reduxjs/toolkit';
+import {
+  createListenerMiddleware,
+  createSlice,
+  PayloadAction
+} from '@reduxjs/toolkit';
 import { AppearanceType } from '@vkontakte/vk-bridge';
 
 import type { RootState } from 'app/store';
@@ -20,7 +24,9 @@ const getAppearance = (): AppearanceType => {
 };
 
 const initialState: LayoutState = {
-  appearance: getAppearance()
+  appearance: getAppearance(),
+  activeModal: null,
+  snackbar: null
 };
 
 const slice = createSlice({
@@ -29,6 +35,15 @@ const slice = createSlice({
   reducers: {
     toggleAppearance: (state) => {
       state.appearance = state.appearance === 'light' ? 'dark' : 'light';
+    },
+    setActiveModal: (
+      state,
+      { payload }: PayloadAction<LayoutState['activeModal']>
+    ) => {
+      state.activeModal = payload;
+    },
+    snackbar: (state, { payload }: PayloadAction<LayoutState['snackbar']>) => {
+      state.snackbar = payload;
     }
   }
 });
@@ -45,6 +60,6 @@ listenerMiddleware.startListening({
   }
 });
 
-export const { toggleAppearance } = slice.actions;
+export const { toggleAppearance, setActiveModal, snackbar } = slice.actions;
 export { listenerMiddleware };
 export default slice.reducer;

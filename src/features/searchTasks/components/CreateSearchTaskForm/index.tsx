@@ -1,23 +1,43 @@
 import { FC } from 'react';
-import { CustomSelectOptionInterface, Group } from '@vkontakte/vkui';
-import { FieldValues } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import { Group } from '@vkontakte/vkui';
 
-import { Form, TextField, SelectField, Button } from 'features/form/components';
+import { useCreateSearchTaskMutation } from 'app/services/searchTasksApi';
+import {
+  Form,
+  TextField,
+  Button,
+  CheckboxField,
+  ChipsField
+} from 'features/form/components';
+import { useSnackbar } from 'hooks';
 
-const testOptions: CustomSelectOptionInterface[] = [
-  {
-    value: '14',
-    label: 'от 14'
-  },
-  {
-    value: '15',
-    label: 'от 15'
-  }
-];
+import {
+  AgeField,
+  CityField,
+  BirthField,
+  SexField,
+  StatusField
+} from '../form';
+
+import Separator from '../Separator';
+import UniversityGroup from '../UniversityGroup';
+import { CreateSearchTaskForm as CreateSearchTaskFormFields } from '../../types';
 
 const CreateSearchTaskForm: FC = () => {
-  const handleSubmit = (data: FieldValues) => {
-    console.log(data);
+  const [create, { isLoading }] = useCreateSearchTaskMutation();
+
+  const snackbar = useSnackbar();
+
+  const navigate = useNavigate();
+
+  const handleSubmit = async (data: CreateSearchTaskFormFields) => {
+    try {
+      await create(data).unwrap();
+      navigate('/');
+    } catch {
+      snackbar({ title: 'Ошибка. Не удалось создать задачу' });
+    }
   };
 
   return (
@@ -25,18 +45,29 @@ const CreateSearchTaskForm: FC = () => {
       <Form onSubmit={handleSubmit}>
         <TextField
           name="title"
-          label="Заголовок"
+          label="Название задачи"
           required
           placeholder="Введите заголовок"
         />
-        <SelectField
-          name="age_from"
-          label="Возраст"
-          placeholder="От"
-          options={testOptions}
-          allowClearButton
+        <Separator />
+        <AgeField />
+        <Separator />
+        <BirthField />
+        <Separator />
+        <CityField />
+        <UniversityGroup />
+        <Separator />
+        <SexField />
+        <StatusField />
+        <CheckboxField name="has_photo" label="С фотографией" />
+        <Separator />
+        <ChipsField
+          name="keywords"
+          label="Ключевые слова"
+          placeholder="Введите ключевые слова"
+          required
         />
-        <Button>Создать задачу</Button>
+        <Button loading={isLoading}>Создать задачу</Button>
       </Form>
     </Group>
   );

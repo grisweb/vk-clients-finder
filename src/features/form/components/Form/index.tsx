@@ -39,7 +39,7 @@ const Form = <TFormValues extends FieldValues>({
   const handleSubmit = (data: FieldValues) => {
     const submittedData = pickBy<FieldValue<FieldValues>>(
       data,
-      (value) => value && value.length > 0
+      (value) => value
     );
     onSubmit(submittedData as TFormValues);
   };

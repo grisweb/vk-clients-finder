@@ -7,36 +7,22 @@ interface Response<T> {
 interface Pagination {
   total: number;
   count: number;
-  perPage: number;
-  currentPage: number;
-  totalPages: number;
+  per_page: number;
+  current_page: number;
 }
 
 interface WithPaginationRequest {
   page: number;
-  perPage: number;
+  per_page: number;
 }
 
 interface WithPaginationResponse {
-  pagination: Pagination;
-}
-
-interface Image {
-  id: string;
-  url: string;
-}
-
-interface File {
-  id: string;
-  url?: string;
-  name: string;
+  meta: Pagination;
 }
 
 export type {
   Response,
   Pagination,
   WithPaginationRequest,
-  WithPaginationResponse,
-  Image,
-  File
+  WithPaginationResponse
 };

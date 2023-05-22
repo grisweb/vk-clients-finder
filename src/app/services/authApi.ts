@@ -5,6 +5,7 @@ import {
   User
 } from 'features/auth/types';
 import { setToken } from 'features/auth/authSlice';
+
 import api from './api';
 
 const authApi = api.injectEndpoints({
@@ -23,7 +24,7 @@ const authApi = api.injectEndpoints({
       onQueryStarted: async (_, { dispatch, queryFulfilled }) => {
         try {
           const {
-            data: { user, accessToken }
+            data: { user, access_token: accessToken }
           } = await queryFulfilled;
           dispatch(authApi.util.upsertQueryData('getMe', null, user));
           dispatch(setToken(accessToken));
@@ -56,7 +57,7 @@ const authApi = api.injectEndpoints({
       onQueryStarted: async (_, { dispatch, queryFulfilled }) => {
         try {
           const {
-            data: { user, accessToken }
+            data: { user, access_token: accessToken }
           } = await queryFulfilled;
           dispatch(authApi.util.upsertQueryData('getMe', null, user));
           dispatch(setToken(accessToken));
@@ -64,13 +65,32 @@ const authApi = api.injectEndpoints({
           /* empty */
         }
       }
+    }),
+    vkConnect: build.mutation<User, string>({
+      query: (credentials) => ({
+        url: '/vk/connect',
+        method: 'POST',
+        body: {
+          code: credentials
+        }
+      }),
+      onQueryStarted: async (_, { dispatch, queryFulfilled }) => {
+        try {
+          const { data: user } = await queryFulfilled;
+          dispatch(authApi.util.upsertQueryData('getMe', null, user));
+        } catch {
+          /* empty */
+        }
+      }
     })
   })
 });
+
 export const {
   useGetMeQuery,
   useLoginMutation,
   useLogoutMutation,
-  useRegisterMutation
+  useRegisterMutation,
+  useVkConnectMutation
 } = authApi;
 export default authApi;

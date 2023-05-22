@@ -1,27 +1,39 @@
 import { FC, useState } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import {
+  CellButton,
+  Group,
+  IconButton,
+  PanelHeader,
   SplitCol,
   SplitLayout,
-  Group,
-  Cell,
-  CellButton,
-  PanelHeader,
+  Div,
+  Snackbar,
   Title,
-  unstable_Popover as Popover,
-  IconButton
+  unstable_Popover as Popover
 } from '@vkontakte/vkui';
-import { Icon28User } from '@vkontakte/icons';
+import {
+  Icon28User,
+  Icon28ErrorCircleOutline,
+  Icon28ListBulletSquareOutline,
+  Icon28ListCheckOutline
+} from '@vkontakte/icons';
 
-import { useAppSelector } from 'app/hooks';
+import { SimpleCellLink } from 'features/ui/components';
+import useVkConnect from 'features/auth/hooks/useVkConnect';
+import { useAppSelector, useAppDispatch } from 'app/hooks';
 import { getToken } from 'features/auth/authSlice';
 import { useGetMeQuery, useLogoutMutation } from 'app/services/authApi';
 
+import { snackbar } from '../../layoutSlice';
 import FullScreenLoader from '../FullScreenLoader';
+import Modal from '../Modal';
 import styles from './MainLayout.module.scss';
 
 const MainLayout: FC = () => {
   const token = useAppSelector(getToken);
+  const snackbarState = useAppSelector((state) => state.layout.snackbar);
+  const dispatch = useAppDispatch();
 
   const { data: user, isFetching } = useGetMeQuery(null, {
     skip: !token
@@ -35,7 +47,9 @@ const MainLayout: FC = () => {
     await logout(null);
   };
 
-  if (isFetching) {
+  const { isConnecting } = useVkConnect();
+
+  if (isFetching || isConnecting) {
     return <FullScreenLoader />;
   }
 
@@ -47,11 +61,31 @@ const MainLayout: FC = () => {
     <SplitLayout
       className={styles['main-layout']}
       header={<PanelHeader separator={false} />}
+      modal={<Modal />}
     >
       <SplitCol fixed width={280} maxWidth={280}>
-        <PanelHeader before={<Title>VK Clients Finder</Title>} />
-        <Group>
-          <Cell>Запросы</Cell>
+        <PanelHeader
+          before={
+            <Div>
+              <Title>VK Clients Finder</Title>
+            </Div>
+          }
+        />
+        <Group mode="plain">
+          <SimpleCellLink
+            className={styles['nav-link']}
+            before={<Icon28ListBulletSquareOutline />}
+            to="/search-tasks"
+          >
+            Задачи
+          </SimpleCellLink>
+          <SimpleCellLink
+            className={styles['nav-link']}
+            before={<Icon28ListCheckOutline />}
+            to="/"
+          >
+            Избранное
+          </SimpleCellLink>
         </Group>
       </SplitCol>
       <SplitCol width="100%" maxWidth="560px" stretchedOnMobile autoSpaced>
@@ -80,6 +114,18 @@ const MainLayout: FC = () => {
           <Outlet />
         </div>
       </SplitCol>
+
+      {snackbarState && (
+        <Snackbar
+          onClose={() => dispatch(snackbar(null))}
+          duration={snackbarState.duration}
+          before={
+            <Icon28ErrorCircleOutline fill="var(--vkui--color_icon_negative)" />
+          }
+        >
+          {snackbarState.title}
+        </Snackbar>
+      )}
     </SplitLayout>
   );
 };
