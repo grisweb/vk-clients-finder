@@ -15,13 +15,21 @@ const searchTaskApi = api.injectEndpoints({
         url: '/search-tasks',
         method: 'POST',
         body
-      })
+      }),
+      invalidatesTags: ['Task']
     }),
     getSearchTasks: builder.query<SearchTasksResponse, SearchTasksRequest>({
       query: (params) => ({
         url: '/search-tasks',
         params
-      })
+      }),
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.tasks.map(({ id }) => ({ type: 'Task' as const, id })),
+              'Task'
+            ]
+          : ['Task']
     }),
     getSearchTask: builder.query<SearchTask, string>({
       query: (id) => ({

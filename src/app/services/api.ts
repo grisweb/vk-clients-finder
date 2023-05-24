@@ -54,7 +54,8 @@ const query: BaseQueryFn<
 const api = createApi({
   reducerPath: 'splitApi',
   baseQuery: query,
-  endpoints: () => ({})
+  endpoints: () => ({}),
+  tagTypes: ['Task']
 });
 
 export default api;
