@@ -1,6 +1,6 @@
 import { FC } from 'react';
-import { UsersFoundList } from 'features/searchTasks/components';
+import { SearchTaskDetail } from 'features/searchTasks/components';
 
-const FoundUsersPage: FC = () => <UsersFoundList />;
+const FoundUsersPage: FC = () => <SearchTaskDetail />;
 
 export default FoundUsersPage;

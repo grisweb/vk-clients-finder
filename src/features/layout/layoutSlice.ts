@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import {
   createListenerMiddleware,
   createSlice,
@@ -26,7 +27,8 @@ const getAppearance = (): AppearanceType => {
 const initialState: LayoutState = {
   appearance: getAppearance(),
   activeModal: null,
-  snackbar: null
+  snackbar: null,
+  popout: null
 };
 
 const slice = createSlice({
@@ -42,6 +44,9 @@ const slice = createSlice({
     ) => {
       state.activeModal = payload;
     },
+    setPopout: (state, { payload }: PayloadAction<ReactNode>) => {
+      state.popout = payload;
+    },
     snackbar: (state, { payload }: PayloadAction<LayoutState['snackbar']>) => {
       state.snackbar = payload;
     }
@@ -53,13 +58,13 @@ const listenerMiddleware = createListenerMiddleware();
 listenerMiddleware.startListening({
   actionCreator: slice.actions.toggleAppearance,
   effect: async (action, api) => {
-    window.localStorage.setItem(
-      'appearance',
-      JSON.stringify((api.getState() as RootState).layout.appearance)
-    );
+    const { appearance } = (api.getState() as RootState).layout;
+
+    window.localStorage.setItem('appearance', JSON.stringify(appearance));
   }
 });
 
-export const { toggleAppearance, setActiveModal, snackbar } = slice.actions;
+export const { toggleAppearance, setActiveModal, setPopout, snackbar } =
+  slice.actions;
 export { listenerMiddleware };
 export default slice.reducer;

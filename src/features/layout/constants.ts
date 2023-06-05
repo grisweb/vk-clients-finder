@@ -1,5 +1,6 @@
 enum Modals {
-  VkConnect = 'vk-connect'
+  VkConnect = 'vk-connect',
+  TaskModal = 'task-modal'
 }
 
 export default Modals;

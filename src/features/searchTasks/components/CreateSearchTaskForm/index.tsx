@@ -12,6 +12,8 @@ import {
 } from 'features/form/components';
 import { useSnackbar } from 'hooks';
 
+import { Separator } from 'features/ui/components';
+
 import {
   AgeField,
   CityField,
@@ -20,7 +22,6 @@ import {
   StatusField
 } from '../form';
 
-import Separator from '../Separator';
 import UniversityGroup from '../UniversityGroup';
 import { CreateSearchTaskForm as CreateSearchTaskFormFields } from '../../types';
 

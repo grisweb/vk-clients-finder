@@ -2,7 +2,6 @@ import { FC, useState } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import {
   CellButton,
-  Group,
   IconButton,
   PanelHeader,
   SplitCol,
@@ -49,6 +48,8 @@ const MainLayout: FC = () => {
 
   const { isConnecting } = useVkConnect();
 
+  const popout = useAppSelector((state) => state.layout.popout);
+
   if (isFetching || isConnecting) {
     return <FullScreenLoader />;
   }
@@ -62,6 +63,7 @@ const MainLayout: FC = () => {
       className={styles['main-layout']}
       header={<PanelHeader separator={false} />}
       modal={<Modal />}
+      popout={popout}
     >
       <SplitCol fixed width={280} maxWidth={280}>
         <PanelHeader
@@ -71,7 +73,7 @@ const MainLayout: FC = () => {
             </Div>
           }
         />
-        <Group mode="plain">
+        <div>
           <SimpleCellLink
             className={styles['nav-link']}
             before={<Icon28ListBulletSquareOutline />}
@@ -86,7 +88,7 @@ const MainLayout: FC = () => {
           >
             Избранное
           </SimpleCellLink>
-        </Group>
+        </div>
       </SplitCol>
       <SplitCol width="100%" maxWidth="560px" stretchedOnMobile autoSpaced>
         <div>
