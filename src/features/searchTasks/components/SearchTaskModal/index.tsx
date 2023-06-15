@@ -29,7 +29,7 @@ const SearchTaskModal: FC = () => {
 
     if (key === 'keywords') {
       return (value as SearchTaskParamsType['keywords']).map((keyword) => (
-        <div key={key}>{keyword}</div>
+        <div key={keyword}>{keyword}</div>
       ));
     }
 

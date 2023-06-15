@@ -1,4 +1,9 @@
-import { AppRoot, ConfigProvider, WebviewType } from '@vkontakte/vkui';
+import {
+  AdaptivityProvider,
+  AppRoot,
+  ConfigProvider,
+  WebviewType
+} from '@vkontakte/vkui';
 import { RouterProvider } from 'react-router-dom';
 
 import { useAppSelector } from 'app/hooks';
@@ -12,11 +17,16 @@ const App = () => {
     <ConfigProvider
       platform="android"
       webviewType={WebviewType.INTERNAL}
+      isWebView={false}
+      locale="ru"
+      transitionMotionEnabled={false}
       appearance={appearance}
     >
-      <AppRoot>
-        <RouterProvider router={router} />
-      </AppRoot>
+      <AdaptivityProvider>
+        <AppRoot mode="full" scroll="global">
+          <RouterProvider router={router} />
+        </AppRoot>
+      </AdaptivityProvider>
     </ConfigProvider>
   );
 };

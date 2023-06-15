@@ -24,6 +24,7 @@ const RegisterForm: FC = () => {
   };
 
   const schema = yup.object({
+    name: yup.string().required(),
     email: yup.string().email(ruleMessages.email).required(),
     password: yup
       .string()

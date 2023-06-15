@@ -39,15 +39,12 @@ const SearchTasksList: FC = () => {
   return data?.meta.total ? (
     <>
       <Group>
-        <ButtonLink
+        <SimpleCellLink
           to="/search-tasks/create"
-          size="m"
-          stretched
           before={<Icon24AddCircleOutline />}
-          mode="secondary"
         >
           Создать задачу
-        </ButtonLink>
+        </SimpleCellLink>
       </Group>
       <Group>
         <Header mode="secondary">Список задач</Header>

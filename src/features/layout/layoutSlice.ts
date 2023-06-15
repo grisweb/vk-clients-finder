@@ -4,28 +4,12 @@ import {
   createSlice,
   PayloadAction
 } from '@reduxjs/toolkit';
-import { AppearanceType } from '@vkontakte/vk-bridge';
 
 import type { RootState } from 'app/store';
 import type { LayoutState } from './types';
 
-const getAppearance = (): AppearanceType => {
-  const localAppearance = window.localStorage.getItem('appearance');
-
-  if (
-    localAppearance &&
-    ['light', 'dark'].includes(JSON.parse(localAppearance))
-  ) {
-    return JSON.parse(localAppearance) as AppearanceType;
-  }
-
-  return window.matchMedia('(prefers-color-scheme: dark)').matches
-    ? 'dark'
-    : 'light';
-};
-
 const initialState: LayoutState = {
-  appearance: getAppearance(),
+  appearance: 'light',
   activeModal: null,
   snackbar: null,
   popout: null

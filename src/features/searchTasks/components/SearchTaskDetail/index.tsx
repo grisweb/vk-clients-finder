@@ -36,17 +36,26 @@ const SearchTaskDetail: FC = () => {
 
   const { page, handleChange } = usePagination();
 
-  const { data: foundUsers, isLoading: usersIsLoading } = useGetFoundUsersQuery(
-    {
-      taskId: taskId as string,
-      page,
-      per_page: 20
-    }
-  );
+  const {
+    data: foundUsers,
+    isLoading: usersIsLoading,
+    refetch: usersRefetch
+  } = useGetFoundUsersQuery({
+    taskId: taskId as string,
+    page,
+    per_page: 20
+  });
 
-  const { data: task, isLoading: taskIsLoading } = useGetSearchTaskQuery(
-    taskId as string
-  );
+  const {
+    data: task,
+    isLoading: taskIsLoading,
+    refetch: taskRefetch
+  } = useGetSearchTaskQuery(taskId as string);
+
+  useEffect(() => {
+    taskRefetch();
+    usersRefetch();
+  }, [taskRefetch, usersRefetch]);
 
   const taskMoreRef = useRef<SVGSVGElement>(null);
   const dispatch = useAppDispatch();
@@ -79,6 +88,15 @@ const SearchTaskDetail: FC = () => {
             before={<Icon20DocumentListOutline />}
           >
             Подробнее
+          </ActionSheetItem>
+          <ActionSheetItem
+            onClick={() => {
+              window.location.href = `${process.env.REACT_APP_API_URL}/found-users/csv?task_id=${taskId}`;
+            }}
+            autoClose
+            before={<Icon20DocumentListOutline />}
+          >
+            Экспорт в CSV
           </ActionSheetItem>
           <ActionSheetItem
             autoClose
@@ -118,12 +136,17 @@ const SearchTaskDetail: FC = () => {
         </Cell>
       </Group>
       <Group>
-        <Header mode="secondary">Найденные клиенты</Header>
+        <Header mode="secondary">
+          Найденные клиенты ({foundUsers.meta.total})
+        </Header>
         {task.status === 'in_progress' ? (
           <Div>Идет поиск...</Div>
         ) : (
           <>
-            <FoundUsersList foundUsers={foundUsers.found_users} />
+            <FoundUsersList
+              foundUsers={foundUsers.found_users}
+              placeholder="Клиенты не найдены"
+            />
             {foundUsers.meta.count < foundUsers.meta.total && (
               <Pagination
                 currentPage={page}

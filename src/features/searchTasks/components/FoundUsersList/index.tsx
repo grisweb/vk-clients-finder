@@ -6,11 +6,15 @@ import { FoundUser } from '../../types';
 
 interface FoundUsersListProps {
   foundUsers: FoundUser[];
+  placeholder: string;
 }
 
-const FoundUsersList: FC<FoundUsersListProps> = ({ foundUsers }) => {
+const FoundUsersList: FC<FoundUsersListProps> = ({
+  foundUsers,
+  placeholder
+}) => {
   return !foundUsers.length ? (
-    <Div>Клиенты не найдены</Div>
+    <Div>{placeholder}</Div>
   ) : (
     <>
       {foundUsers.map(({ id, vk_id, first_name, last_name, img_url }) => (

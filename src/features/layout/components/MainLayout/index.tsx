@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import {
   CellButton,
   IconButton,
@@ -9,7 +9,11 @@ import {
   Div,
   Snackbar,
   Title,
-  unstable_Popover as Popover
+  unstable_Popover as Popover,
+  useAdaptivityConditionalRender,
+  Tabbar,
+  TabbarItem,
+  Spacing
 } from '@vkontakte/vkui';
 import {
   Icon28User,
@@ -50,6 +54,11 @@ const MainLayout: FC = () => {
 
   const popout = useAppSelector((state) => state.layout.popout);
 
+  const { viewWidth } = useAdaptivityConditionalRender();
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
   if (isFetching || isConnecting) {
     return <FullScreenLoader />;
   }
@@ -65,34 +74,66 @@ const MainLayout: FC = () => {
       modal={<Modal />}
       popout={popout}
     >
-      <SplitCol fixed width={280} maxWidth={280}>
-        <PanelHeader
-          before={
-            <Div>
-              <Title>VK Clients Finder</Title>
-            </Div>
-          }
-        />
-        <div>
-          <SimpleCellLink
-            className={styles['nav-link']}
-            before={<Icon28ListBulletSquareOutline />}
-            to="/search-tasks"
-          >
-            Задачи
-          </SimpleCellLink>
-          <SimpleCellLink
-            className={styles['nav-link']}
-            before={<Icon28ListCheckOutline />}
-            to="/"
-          >
-            Избранное
-          </SimpleCellLink>
-        </div>
-      </SplitCol>
+      {viewWidth.tabletPlus && (
+        <SplitCol
+          fixed
+          width={280}
+          maxWidth={280}
+          className={viewWidth.tabletPlus.className}
+        >
+          <PanelHeader
+            before={
+              <Div>
+                <Title>VK Clients Finder</Title>
+              </Div>
+            }
+          />
+          <div>
+            <SimpleCellLink
+              className={styles['nav-link']}
+              before={<Icon28ListBulletSquareOutline />}
+              to="/search-tasks"
+            >
+              Задачи
+            </SimpleCellLink>
+            <SimpleCellLink
+              className={styles['nav-link']}
+              before={<Icon28ListCheckOutline />}
+              to="/favorites"
+            >
+              Избранное
+            </SimpleCellLink>
+          </div>
+        </SplitCol>
+      )}
       <SplitCol width="100%" maxWidth="560px" stretchedOnMobile autoSpaced>
+        {viewWidth.tabletMinus && (
+          <Tabbar mode="horizontal" className={viewWidth.tabletMinus.className}>
+            <TabbarItem
+              text="Задачи"
+              onClick={() => navigate('/search-tasks')}
+              selected={location.pathname === '/search-tasks'}
+            >
+              <Icon28ListBulletSquareOutline />
+            </TabbarItem>
+            <TabbarItem
+              text="Избранное"
+              onClick={() => navigate('/favorites')}
+              selected={location.pathname === '/favorites'}
+            >
+              <Icon28ListCheckOutline />
+            </TabbarItem>
+          </Tabbar>
+        )}
         <div>
           <PanelHeader
+            before={
+              viewWidth.tabletMinus && (
+                <Div className={viewWidth.tabletMinus.className}>
+                  <Title>VK Clients Finder</Title>
+                </Div>
+              )
+            }
             after={
               <Popover
                 action="click"
@@ -114,6 +155,7 @@ const MainLayout: FC = () => {
             }
           />
           <Outlet />
+          <Spacing size={40} />
         </div>
       </SplitCol>
 

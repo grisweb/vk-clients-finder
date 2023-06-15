@@ -5,7 +5,8 @@ import {
   HomePage,
   LoginPage,
   RegisterPage,
-  FoundUsersPage
+  FoundUsersPage,
+  FavoritesPage
 } from 'pages';
 import { MainLayout } from 'features/layout/components';
 import AuthLayout from 'features/auth/components/AuthLayout';
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
           {
             path: 'search-tasks/:taskId',
             element: <FoundUsersPage />
+          },
+          {
+            path: 'favorites',
+            element: <FavoritesPage />
           }
         ]
       }
